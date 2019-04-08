@@ -12,7 +12,7 @@ def start_screen():
           # 3. consulter la base de données                          #
           #                                                          #
           #                                                          #
-          # choissisez un chiffre et appuyez sur "entrée" pour       #
+          # Choissisez un chiffre et appuyez sur "entrée" pour       #
           # valider votre sélection.                                 #
           #                                                          #
           # Appuyez sur Q et "entrée" pour quitter                   #
@@ -39,7 +39,7 @@ def cat_selection_screen():
           # 10. Snack salés                                          #
           #                                                          #
           #                                                          #
-          # choissisez un chiffre et appuyez sur "entrée" pour       #
+          # Choissisez un chiffre et appuyez sur "entrée" pour       #
           # valider votre sélection.                                 #
           #                                                          #
           ############################################################
@@ -69,7 +69,7 @@ def store_screen():
           # 15. SIMPLY MARKET                                        #
           #                                                          #
           #                                                          #
-          # choissisez un chiffre et appuyez sur "entrée" pour       #
+          # Choissisez un chiffre et appuyez sur "entrée" pour       #
           # valider votre sélection.                                 #
           #                                                          #
           ############################################################

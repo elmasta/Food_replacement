@@ -1,6 +1,7 @@
 from display import cat_selection_screen, store_screen
 import mysql.connector
 
+
 class SqlInit:
     """This class is used to connect the user to the database"""
 
@@ -17,6 +18,7 @@ class SqlInit:
         )
         self.cursordb = self.mydb.cursor()
         self.cursordb.execute("USE food_replacement")
+
 
 class UserChoice:
     """This class is used to consult the database and to replace a
@@ -61,7 +63,7 @@ class UserChoice:
         print("Voici vos dix derniers remplacements:")
         cursor.execute("""SELECT Research_history.product_researched_name,
                        Product.product_name
-                       FROM Product 
+                       FROM Product
                        LEFT JOIN Research_history
                        ON Product.id = Research_history.product_id_replaced
                        WHERE Research_history.product_researched_name
@@ -96,11 +98,11 @@ y ou Y pour oui
 """)
         if answer_ing != "y" or "Y":
             sql = ("""SELECT Product.product_name FROM Product
-                   INNER JOIN Store_availability 
+                   INNER JOIN Store_availability
                    ON Product.id = Store_availability.product_id
                    INNER JOIN Product_category
                    ON Product.id = Product_category.product_id
-                   WHERE Product.product_name LIKE %s 
+                   WHERE Product.product_name LIKE %s
                    AND Store_availability.store_id = %s
                    AND Product_category.category_id = %s
                    ORDER BY Product.nutrition_grades LIMIT 1""")
@@ -115,12 +117,12 @@ y ou Y pour oui
                 print("la ou le {0}".format(row[0]))
         else:
             sql = ("""SELECT Product.product_name, Product.ingredients
-                   FROM Product 
+                   FROM Product
                    INNER JOIN Store_availability
                    ON Product.id = Store_availability.product_id
                    INNER JOIN Product_category
                    ON Product.id = Product_category.product_id
-                   WHERE Product.product_name LIKE %s 
+                   WHERE Product.product_name LIKE %s
                    AND Store_availability.store_id = %s
                    AND Product_category.category_id = %s
                    ORDER BY Product.nutrition_grades LIMIT 1""")
@@ -144,15 +146,15 @@ y ou Y pour oui
 Cela vous convient-il? y ou Y pour valider 
 """)
         if answer_selec == "y" or "Y":
-            #searching for the id of the replacement product to record
-            #it later in the Research_history table.
+            # searching for the id of the replacement product to record
+            # it later in the Research_history table.
             sql = ("""SELECT Product.id FROM Product WHERE
                    Product.product_name = %s""")
             val = (self.selec_prod,)
             cursor.execute(sql, val)
             for row in cursor:
                 id_prod = row[0]
-            #record the change into the Research_history table.
+            # record the change into the Research_history table.
             sql = """INSERT INTO Research_history (product_researched_name,
                   product_id_replaced)
                   VALUES (%s, %s)"""

@@ -7,8 +7,9 @@ from choice import *
 SELECTION = UserChoice()
 SQL = SqlInit()
 
-#connection to mysql
+# connection to mysql
 SQL.db_conection()
+
 
 def main():
     """Main function"""
@@ -18,7 +19,6 @@ def main():
         start_screen()
         choice = input("Votre sélection: ")
         if choice == "1":
-            print(1)
             SELECTION.category_choice()
             while SELECTION.quit_err == 1:
                 SELECTION.category_choice()

@@ -14,7 +14,7 @@ STORE_LIST = ["PICARD", "CARREFOUR", "CASINO", "CORA", "LECLERC",
               "SIMPLY MARKET"]
 PRODUCT_NO = 1
 
-#connection to mysql
+# connection to mysql
 MYDB = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -22,7 +22,7 @@ MYDB = mysql.connector.connect(
 )
 CURSORDB = MYDB.cursor()
 
-#database and tables creation
+# database and tables creation
 CURSORDB.execute("CREATE DATABASE food_replacement CHARACTER SET 'utf8'")
 CURSORDB.execute("USE food_replacement")
 CURSORDB.execute("""CREATE TABLE Product (id INT UNSIGNED AUTO_INCREMENT,
@@ -51,13 +51,13 @@ for each_store in STORE_LIST:
     val = (each_store,)
     CURSORDB.execute(sql, val)
 
-#Data import from open food fact.
+# Data import from open food fact.
 for each_categories in CATEGORIES:
     sql = "INSERT INTO Category (category_name) VALUES (%s)"
     val = (each_categories,)
     CURSORDB.execute(sql, val)
     MYDB.commit()
-    #We select 60 product pages for each categories.
+    # We select the first 60 product pages from each categories.
     for category_page in range(60):
         category_page_str = str(category_page)
         url = "https://fr-en.openfoodfacts.org/category/" + each_categories +\
@@ -65,12 +65,12 @@ for each_categories in CATEGORIES:
         response = requests.get(url)
         found = json.loads(response.text)
         product_comp = found["products"]
-        #We scan each product on a page
+        # We scan each product on a page
         for each_product in product_comp:
             try:
-                #We check if each product is: French, has at least one
-                #store, has the ingredients and a bare code. if
-                #something is missing, we go to the next.
+                # We check if each product is: French, has at least one
+                # store, has the ingredients and a bare code. if
+                # something is missing, we go to the next.
                 if each_product["countries_tags"].count("en:france") >= 1 and\
                    each_product["stores"] != "" and\
                    each_product["ingredients_text_fr"] != "" and\
@@ -80,28 +80,38 @@ for each_categories in CATEGORIES:
                     current_store_list = store_upper.split(",")
                     for each_store in current_store_list:
                         each_store = each_store.strip()
-                        #Now we check if at least one store is in our
-                        #store list.
+                        # Now we check if at least one store is in our
+                        # store list.
                         if each_store in STORE_LIST:
                             store_counter += 1
                             try:
                                 sql = """INSERT INTO Store_availability
-                                      (product_id, store_id) VALUES (%s, %s)"""
+                                      (product_id, store_id) VALUES (%s, %s)
+                                      """
                                 val = (PRODUCT_NO + 1,
                                        STORE_LIST.index(each_store) + 1)
                                 CURSORDB.execute(sql, val)
                                 MYDB.commit()
                             except mysql.connector.Error as err:
                                 print(err)
-                    #We check if there was at least on correct store
-                    #for that product.
+                    # We check if there was at least on correct store
+                    # for that product.
                     if store_counter > 0:
+                        clean_product_name =\
+                        each_product["product_name"].replace("\\n", " ")
+                        clean_product_name =\
+                        clean_product_name.replace("\\r", " ")
+                        clean_ingredient =\
+                        each_product["ingredients_text_fr"].replace(
+                            "\\n", " ")
+                        clean_ingredient =\
+                        clean_ingredient.replace("\\r", " ")
                         sql = """INSERT INTO Product (product_name,
-                              nutrition_grades, ingredients) 
+                              nutrition_grades, ingredients)
                               VALUES (%s, %s, %s)"""
-                        val = (each_product["product_name"],
+                        val = (clean_product_name,
                                each_product["nutrition_grades"],
-                               each_product["ingredients_text_fr"])
+                               clean_ingredient)
                         CURSORDB.execute(sql, val)
                         MYDB.commit()
                         sql = """INSERT INTO Product_category
