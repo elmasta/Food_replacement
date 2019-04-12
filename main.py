@@ -15,7 +15,7 @@ def main():
     """Main function"""
 
     quit = 0
-    while quit == 0 or SELECTION.quit_err == 0:
+    while quit == 0:
         start_screen()
         choice = input("Votre sélection: ")
         if choice == "1":
@@ -29,14 +29,15 @@ def main():
             if SELECTION.product_found is not False:
                 SELECTION.replacement_record(SQL.cursordb, SQL.mydb)
             else:
-                print("""Aucun produit de remplacement trouvé dans ce
-                      magasin ou cette catégorie""")
+                print("""
+Aucun produit de remplacement trouvé dans ce magasin ou cette catégorie
+""")
         elif choice == "2":
             SELECTION.replacement_consult(SQL.cursordb)
         elif choice == "3":
             SELECTION.category_choice()
             SELECTION.db_consult(SQL.cursordb)
-        elif choice == "q" or "Q":
+        else:
             quit = 1
 
 main()

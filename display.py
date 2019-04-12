@@ -9,13 +9,13 @@ def start_screen():
           #                                                          #
           # 1. Remplacer un produit                                  #
           # 2. Consulter l'historique des remplacements              #
-          # 3. consulter la base de données                          #
+          # 3. Consulter la base de données                          #
           #                                                          #
           #                                                          #
           # Choissisez un chiffre et appuyez sur "entrée" pour       #
           # valider votre sélection.                                 #
           #                                                          #
-          # Appuyez sur Q et "entrée" pour quitter                   #
+          # Appuyez sur une autre touche et "entrée" pour quitter.   #
           #                                                          #          
           ############################################################
           """)
@@ -36,7 +36,7 @@ def cat_selection_screen():
           # 7. Plats préparés surgelés                               #
           # 8. Yaourts                                               #
           # 9. Snacks sucrés                                         #
-          # 10. Snack salés                                          #
+          # 10. Snacks salés                                         #
           #                                                          #
           #                                                          #
           # Choissisez un chiffre et appuyez sur "entrée" pour       #

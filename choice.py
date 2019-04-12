@@ -28,7 +28,7 @@ class UserChoice:
         self.category_selected = 0
         self.store_selected = 0
         self.selec_prod = ()
-        self.product_found = True
+        self.product_found = False
         self.name = ""
         self.quit_err = 0
 
@@ -62,15 +62,20 @@ class UserChoice:
         ten changes made"""
         print("Voici vos dix derniers remplacements:")
         cursor.execute("""SELECT Research_history.product_researched_name,
-                       Product.product_name
+                       Product.product_name, Store.store_name,
+                       Product.ingredients
                        FROM Product
                        LEFT JOIN Research_history
                        ON Product.id = Research_history.product_id_replaced
+                       LEFT JOIN Store
+                       ON Research_history.store_id_replaced = Store.id
                        WHERE Research_history.product_researched_name
                        IS NOT NULL
                        ORDER BY Research_history.id DESC""")
         for row in cursor:
-            print("{0} was replaced by {1}".format(row[0], row[1]))
+            print("""
+\n{0} a été remplacé par {1} que vous trouverez chez {2} et qui contient:\n{3}
+""".format(row[0], row[1], row[2], row[3]))
 
     def store_selection(self):
         """This methode let the user select a store"""
@@ -108,9 +113,7 @@ y ou Y pour oui
                    ORDER BY Product.nutrition_grades LIMIT 1""")
             val = (formated_name, self.store_selected, self.category_selected)
             cursor.execute(sql, val)
-            found = 0
             for row in cursor:
-                found = 1
                 self.product_found = True
                 print("Nous vous avons sélectionné ceci:")
                 self.selec_prod = row[0]
@@ -129,13 +132,10 @@ y ou Y pour oui
             val = (formated_name, self.store_selected, self.category_selected)
             cursor.execute(sql, val)
             for row in cursor:
-                found = 1
                 self.product_found = True
                 print("Nous vous avons sélectionné ceci:")
                 self.selec_prod = row[0]
                 print("la ou le {0} qui contient:\n{1}".format(row[0], row[1]))
-            if found == 0:
-                self.product_found = False
 
     def replacement_record(self, cursor, mydb):
         """Second part of the replacement process. This methode let the
@@ -156,8 +156,8 @@ Cela vous convient-il? y ou Y pour valider
                 id_prod = row[0]
             # record the change into the Research_history table.
             sql = """INSERT INTO Research_history (product_researched_name,
-                  product_id_replaced)
-                  VALUES (%s, %s)"""
-            val = (self.name, int(id_prod))
+                  product_id_replaced, store_id_replaced)
+                  VALUES (%s, %s, %s)"""
+            val = (self.name, int(id_prod), self.store_selected)
             cursor.execute(sql, val)
             mydb.commit()
