@@ -25,7 +25,11 @@ def main():
             SELECTION.store_selection()
             while SELECTION.quit_err == 1:
                 SELECTION.store_selection()
-            SELECTION.replacement(SQL.cursordb)
+            SELECTION.replacement_method_choice()
+            if SELECTION.selection == "1":
+                SELECTION.list_replacement(SQL.cursordb)
+            else:
+                SELECTION.manual_replacement(SQL.cursordb)
             if SELECTION.product_found is not False:
                 SELECTION.replacement_record(SQL.cursordb, SQL.mydb)
             else:

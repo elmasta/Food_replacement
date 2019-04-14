@@ -4,9 +4,8 @@ import json
 import requests
 import mysql.connector
 
-CATEGORIES = ["pizzas", "non-alcoholic-beverages", "alcoholic-beverages",
-              "ravioli", "sweet-spreads", "cheeses",
-              "frozen-ready-made-meals", "yogurts", "sweet-snacks",
+CATEGORIES = ["pizzas", "non-alcoholic-beverages", "ravioli", "sweet-spreads",
+              "cheeses", "frozen-ready-made-meals", "yogurts", "sweet-snacks",
               "salty-snacks"]
 STORE_LIST = ["PICARD", "CARREFOUR", "CASINO", "CORA", "LECLERC",
               "MAGASINS U", "FRANPRIX", "LEADER PRICE", "LIDL", "MONOPRIX",
@@ -28,6 +27,7 @@ CURSORDB.execute("USE food_replacement")
 CURSORDB.execute("""CREATE TABLE Product (id INT UNSIGNED AUTO_INCREMENT,
                  product_name VARCHAR(200) NOT NULL,
                  nutrition_grades CHAR(1) NOT NULL, ingredients TEXT NOT NULL,
+                 url VARCHAR(200) NOT NULL,
                  PRIMARY KEY(id)) ENGINE=InnoDB""")
 CURSORDB.execute("""CREATE TABLE Store (id INT UNSIGNED AUTO_INCREMENT,
                  store_name VARCHAR(200) NOT NULL, PRIMARY KEY(id))
@@ -75,14 +75,16 @@ for each_categories in CATEGORIES:
                 if each_product["countries_tags"].count("en:france") >= 1 and\
                    each_product["stores"] != "" and\
                    each_product["ingredients_text_fr"] != "" and\
-                   each_product["id"] != "":
+                   each_product["id"] != "" and\
+                   each_product["nutrition_grades"] != "" and\
+                   each_product["url"] != "":
                     store_counter = 0
                     store_upper = each_product["stores"].upper()
                     current_store_list = store_upper.split(",")
                     for each_store in current_store_list:
-                        each_store = each_store.strip()
                         # Now we check if at least one store is in our
                         # store list.
+                        each_store = each_store.strip()
                         if each_store in STORE_LIST:
                             store_counter += 1
                             try:
@@ -97,7 +99,7 @@ for each_categories in CATEGORIES:
                                 print(err)
                     # We check if there was at least on correct store
                     # for that product.
-                    if store_counter > 0:
+                    if store_counter != 0:
                         clean_product_name =\
                         each_product["product_name"].replace("\\n", " ")
                         clean_product_name =\
@@ -108,11 +110,11 @@ for each_categories in CATEGORIES:
                         clean_ingredient =\
                         clean_ingredient.replace("\\r", " ")
                         sql = """INSERT INTO Product (product_name,
-                              nutrition_grades, ingredients)
-                              VALUES (%s, %s, %s)"""
+                              nutrition_grades, ingredients, url)
+                              VALUES (%s, %s, %s, %s)"""
                         val = (clean_product_name,
                                each_product["nutrition_grades"],
-                               clean_ingredient)
+                               clean_ingredient, each_product["url"])
                         CURSORDB.execute(sql, val)
                         MYDB.commit()
                         sql = """INSERT INTO Product_category
@@ -123,4 +125,4 @@ for each_categories in CATEGORIES:
                         MYDB.commit()
                         PRODUCT_NO += 1
             except KeyError:
-                print("No French ingredients list or ID")
+                print("No French ingredients list, nutrition grade or ID")

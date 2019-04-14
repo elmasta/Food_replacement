@@ -1,7 +1,7 @@
 def start_screen():
     print("""
           ############################################################
-          #                Bienvenue au Food Swap V1                 #
+          #                Bienvenue au Food Swap V1.1               #
           ############################################################
           #                                                          #
           #                   Faites votre choix:                    #
@@ -29,14 +29,13 @@ def cat_selection_screen():
           #                                                          #
           # 1. Pizzas                                                #
           # 2. Boissons non alcoolisés                               #
-          # 3. Boissons alcoolisés                                   #
-          # 4. Raviolis                                              #
-          # 5. Produits à tartiner sucrés                            #
-          # 6. Fromages                                              #
-          # 7. Plats préparés surgelés                               #
-          # 8. Yaourts                                               #
-          # 9. Snacks sucrés                                         #
-          # 10. Snacks salés                                         #
+          # 3. Raviolis                                              #
+          # 4. Produits à tartiner sucrés                            #
+          # 5. Fromages                                              #
+          # 6. Plats préparés surgelés                               #
+          # 7. Yaourts                                               #
+          # 8. Snacks sucrés                                         #
+          # 9. Snacks salés                                          #
           #                                                          #
           #                                                          #
           # Choissisez un chiffre et appuyez sur "entrée" pour       #
@@ -67,6 +66,27 @@ def store_screen():
           # 13. AUCHAN                                               #
           # 14. LA VIE CLAIRE                                        #
           # 15. SIMPLY MARKET                                        #
+          #                                                          #
+          #                                                          #
+          # Choissisez un chiffre et appuyez sur "entrée" pour       #
+          # valider votre sélection.                                 #
+          #                                                          #
+          ############################################################
+          """)
+
+def replacement_method():
+    print("""
+          ############################################################
+          #                                                          #
+          # Souhaitez vous sélectionner un produit à remplacer ou    #
+          # souhaitez vous taper directement le nom du produit que   #
+          # vous souhaitez remplacer?                                #
+          #                                                          #
+          #                                                          #
+          # 1.  Choisir un produit à remplacer parmis une liste      #
+          #     proposé                                              #
+          #                                                          #
+          # 2.  Taper manuellement le nom du produit à remplacer     #
           #                                                          #
           #                                                          #
           # Choissisez un chiffre et appuyez sur "entrée" pour       #
