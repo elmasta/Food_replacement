@@ -36,7 +36,9 @@ CURSORDB.execute("""CREATE TABLE Research_history
                  (id INT UNSIGNED AUTO_INCREMENT,
                  product_researched_name VARCHAR(200),
                  product_id_replaced INT UNSIGNED,
-                 store_id_replaced INT UNSIGNED, PRIMARY KEY(id))
+                 store_id_replaced INT UNSIGNED, PRIMARY KEY(id),
+                 FOREIGN KEY (store_id_replaced) REFERENCES Store(id),
+                 FOREIGN KEY (product_id_replaced) REFERENCES Product(id))
                  ENGINE=InnoDB""")
 CURSORDB.execute("""CREATE TABLE Store_availability (product_id INT UNSIGNED,
                  store_id INT UNSIGNED, PRIMARY KEY(product_id, store_id))
@@ -45,7 +47,10 @@ CURSORDB.execute("""CREATE TABLE Category (id INT UNSIGNED AUTO_INCREMENT,
                  category_name VARCHAR(80), PRIMARY KEY(id)) ENGINE=InnoDB""")
 CURSORDB.execute("""CREATE TABLE Product_category (product_id INT UNSIGNED,
                  category_id INT UNSIGNED,
-                 PRIMARY KEY(product_id, category_id)) ENGINE=InnoDB""")
+                 PRIMARY KEY(product_id, category_id),
+                 FOREIGN KEY (product_id) REFERENCES Product(id),
+                 FOREIGN KEY (category_id) REFERENCES Category(id))
+                 ENGINE=InnoDB""")
 
 for each_store in STORE_LIST:
     sql = "INSERT INTO Store (store_name) VALUES (%s)"
